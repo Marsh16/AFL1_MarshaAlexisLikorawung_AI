@@ -19,11 +19,6 @@ def dfs(graph, start, end):
 
     return None
 
-def print_graph_tree(graph, node, depth=0):
-    print("  " * depth + node)
-    for neighbor, _ in graph.get(node, {}).items():
-        print_graph_tree(graph, neighbor, depth + 1)
-
 if __name__ == "__main__":
     graph = {
         "denpasar": {"mengwi": 1, "ngerebong": 1},
@@ -45,8 +40,6 @@ if __name__ == "__main__":
         "gianyar": "gianyar_1",
         "gianyar": "gianyar_2"
     }
-
-    print_graph_tree(graph, "denpasar")
 
     # Replace "gianyar" with the corresponding identifier
     for node, neighbors in graph.items():
