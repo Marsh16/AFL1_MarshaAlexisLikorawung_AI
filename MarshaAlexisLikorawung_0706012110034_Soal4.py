@@ -1,5 +1,3 @@
-import copy
-
 # buat playernya
 class Player:
     def __init__(self):
@@ -33,7 +31,7 @@ def action(state):
 
 # untuk mendisplaykan/menunjukan papan baru setelah pemain melakukan tindakan di kolom tertentu.
 def result(state, actions, player):
-    new_board = copy.deepcopy(state)
+    new_board = [row[:] for row in state]
     for row in range(5, -1, -1):
         if new_board[row][actions] == ' ':
             new_board[row][actions] = player
