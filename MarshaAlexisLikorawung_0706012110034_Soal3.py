@@ -1,4 +1,5 @@
-def dfs(graph, start, end):
+# Fungsi pencarian jalur menggunakan metode DFS (Depth-First Search).
+def depth_first_search(graph, start, end):
     stack = [(start, [start])]
     visited = set()
 
@@ -19,7 +20,9 @@ def dfs(graph, start, end):
 
     return None
 
+# mulai program
 if __name__ == "__main__":
+# Definisi graf berisi keterhubungan antar lokasi.
     graph = {
         "denpasar": {"mengwi": 1, "ngerebong": 1},
         "mengwi": {"canggu": 1, "sukawati": 1, "tabanan": 1},
@@ -36,43 +39,60 @@ if __name__ == "__main__":
         "gianyar_1": {},
     }
 
+ # Identifikasi node dengan nama yang berbeda. agar bisa kalau dipanggil tetap gianyar bukan gianyar_1 atau gianyar_2
     node_identifiers = {
         "gianyar": "gianyar_1",
         "gianyar": "gianyar_2"
     }
 
-    # Replace "gianyar" with the corresponding identifier
-    for node, neighbors in graph.items():
-        for neighbor, weight in neighbors.items():
-            if neighbor in node_identifiers:
-                neighbors[node_identifiers[neighbor]] = weight
-                del neighbors[neighbor]
+ # Fungsi untuk memperbarui isi dari yang gianyar_1 atau gianyar_2 jadi gianyar aja, dari setiap node berdasarkan identifikasi gianyar.
+    def update_neighbors():
+        for node, neighbors in graph.items():
+            for neighbor, weight in neighbors.items():
+                if neighbor in node_identifiers:
+                    neighbors[node_identifiers[neighbor]] = weight
+                    del neighbors[neighbor]
 
-    start_node = input("Enter the start node: ")
-    end_node = input("Enter the end node: ")
-    if end_node == 'gianyar':
-        result_1 = dfs(graph, start_node, "gianyar_1")
-        result_2 = dfs(graph, start_node, "gianyar_2")
+# Memanggil fungsi untuk memperbarui isi.
+    update_neighbors()
 
-        if result_1:
-            result_1 = [node.replace("gianyar_1", "gianyar") for node in result_1]
-            print(f"The path from {start_node} to gianyar_1 is: {' -> '.join(result_1)}")
-        elif result_2:
-            result_2 = [node.replace("gianyar_2", "gianyar") for node in result_2]
-            print(f"The path from {start_node} to gianyar_2 is: {' -> '.join(result_2)}")
+# Meminta input untuk node awal dan akhir. dan ada error handlingnya kalau tidak sesuai graph 
+    while True:
+        start_node = input("Input the start node: ")
+        if start_node == 'gianyar':
+            start_node = 'gianyar_2'
+            break
+        elif start_node in graph:
+            break
         else:
-            print(f"No path found from {start_node} to gianyar")
+            print(f"'{start_node}' is not a valid node. Please try again.")
 
-    else:
-        result = dfs(graph, start_node, end_node)
+    while True:
+        end_node = input("Input the end node: ")
+        if end_node in graph:
+            # Mencari jalur jika tujuan akhir adalah 'gianyar'. maka, gianyar 1 2nya harus diconvert jadi gianyar saja dan cek kedua dfsnya untuk yang gianyar1 dan dfs gianyar2, kemudian jika yang ditemukan gianyar 1 yang di print tetap gianyar dan jika ditemukan gianyar 2 juga diprint tetap gianyar
+            result = depth_first_search(graph, start_node, end_node)
+            if result:
+                result = [node.replace("gianyar_1", "gianyar").replace("gianyar_2", "gianyar") for node in result]
+                print(f"The path from {start_node} to {end_node} is: {' -> '.join(result)}")
+                break
+            else:
+                print(f"No path found from {start_node} to {end_node}")
+                break
+        elif end_node == 'gianyar':
+            result_1 = depth_first_search(graph, start_node, "gianyar_1")
+            result_2 = depth_first_search(graph, start_node, "gianyar_2")
 
-        if result:
-            result = [node.replace("gianyar_1", "gianyar").replace("gianyar_2", "gianyar") for node in result]
-            print(f"The path from {start_node} to {end_node} is: {' -> '.join(result)}")
+            if result_1:
+                result_1 = [node.replace("gianyar_1", "gianyar") for node in result_1]
+                print(f"The path from {start_node} to gianyar is: {' -> '.join(result_1)}")
+                break
+            elif result_2:
+                result_2 = [node.replace("gianyar_2", "gianyar") for node in result_2]
+                print(f"The path from {start_node} to gianyar is: {' -> '.join(result_2)}")
+                break
+            else:
+                print(f"No path found from {start_node} to gianyar")
+                break
         else:
-            print(f"No path found from {start_node} to {end_node}")
-
-
-
-
-
+            print(f"'{end_node}' is not a valid node. Please try again.")
